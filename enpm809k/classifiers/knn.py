@@ -11,11 +11,11 @@ class KNearestNeighbor(object):
   def predict(self, X: np.ndarray,
               k: int=1, num_loops: int=0) -> np.ndarray:
     if num_loops == 0:
-      dists = self.compute_distance_no_loops(X)
+      dists = self.compute_distances_no_loop(X)
     elif num_loops == 1:
-      dists = self.compute_distance_one_loop(X)
+      dists = self.compute_distances_one_loop(X)
     elif num_loops == 2:
-      dists = self.compute_distance_two_loops(X)
+      dists = self.compute_distances_two_loops(X)
     else:
       raise ValueError(f'Invalid value {num_loops} for num_loops!')
     
@@ -39,7 +39,12 @@ class KNearestNeighbor(object):
     return dists
   
   def compute_distances_no_loop(self, X: np.ndarray) -> np.ndarray:
-    raise NotImplementedError(f'This method is not yet available.')
+    num_test = X.shape[0]
+    num_train = self.X_train.shape[0]
+    X_norm_squared = np.sum(np.square(X), axis=1).reshape(num_test, 1)
+    X_train_norm_squared = np.sum(np.square(self.X_train), axis=1).reshape(1, num_train)
+    dists = np.sqrt(X_norm_squared + X_train_norm_squared - 2 * X.dot(self.X_train.T))
+    return dists
   
   def predict_labels(self, dists: np.ndarray, k: int) -> np.ndarray:
     num_test = dists.shape[0]
