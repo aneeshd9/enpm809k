@@ -31,7 +31,12 @@ class KNearestNeighbor(object):
     return dists
   
   def compute_distances_one_loop(self, X: np.ndarray) -> np.ndarray:
-    raise NotImplementedError(f'This method is not yet available.')
+    num_test = X.shape[0]
+    num_train = self.X_train.shape[0]
+    dists = np.zeros((num_test, num_train))
+    for i in range(num_test):
+      dists[i] = np.sqrt(np.sum(np.square(self.X_train - X[i]), axis=1))
+    return dists
   
   def compute_distances_no_loop(self, X: np.ndarray) -> np.ndarray:
     raise NotImplementedError(f'This method is not yet available.')

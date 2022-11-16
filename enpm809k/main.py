@@ -51,6 +51,14 @@ def knn():
     print(f'Got {num_correct} / {gt.shape[0]} correct => accuracy {accuracy}')
     return accuracy
   
+  def knn_dists_compare(dists_naive: np.ndarray, dists: np.ndarray) -> None:
+    difference = np.linalg.norm(dists_naive - dists, ord='fro')
+    print(f'The difference was: {difference}')
+    if difference < 0.001:
+      print('Good! The distance matrices are the same.')
+    else:
+      print('Uh-oh! The distance matrices are different.')
+  
   X_train, y_train, X_test, y_test = data_setup(num_training=5000, num_test=500)
   print(f'Training data shape: {X_train.shape}')
   print(f'Training labels shape: {y_train.shape}')
@@ -68,6 +76,9 @@ def knn():
   
   y_test_pred = classifier.predict_labels(dists, 5)
   knn_accuracy(y_test_pred, y_test)
+  
+  dists_one = classifier.compute_distances_one_loop(X_test)
+  knn_dists_compare(dists, dists_one)
 
 if __name__ == '__main__':
   knn()
